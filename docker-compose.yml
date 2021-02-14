@@ -1,0 +1,27 @@
+version: '3'
+services:
+
+  nginx-proxy-google:
+    networks:
+      - no-internet
+      - internet
+    image: nginx:stable
+    volumes:
+      - ./nginx_proxy_google.conf:/etc/nginx/nginx.conf
+      - ./ssl-conf:/etc/nginx/ssl-conf
+    restart: always
+
+
+##### Protected section
+
+  protected-container:
+    networks:
+      - no-internet
+    links:
+      - nginx-proxy-google:google.com
+    image: nginx:stable
+
+networks:
+  internet: {}
+  no-internet:
+    internal: true
